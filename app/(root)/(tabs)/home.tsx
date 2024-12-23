@@ -35,7 +35,7 @@ const Home = ({
   const [collapseAnim] = useState(new Animated.Value(0)); // Initialize the animation value for collapse
 
   const { user } = useUserStore();
-  console.log(user);
+
 
   const handleSignOut = async () => {
     try {

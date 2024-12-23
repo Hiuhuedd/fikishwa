@@ -53,12 +53,25 @@ console.log(userData);
           uid: user.uid,
           email: user.email,
           userType: userType,
-          userName:userData.username
+          userName:userData.username,
+          phone:userData.phone
         });
 
         // Redirect based on user type
         if (userType === "driver") {
-          router.replace("/driver-dash"); // Driver-specific route
+          const driverDoc = await getDoc(doc(db, "driverDetails", user.uid));
+      
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+   if(!userData.carModel){
+    router.replace("/driver-reg");
+
+   }else{
+     router.replace("/driver-dash");
+
+   }
+    
+          } // Driver-specific route
         } else {
           router.replace("/(root)/(tabs)/home"); // General user route
         }

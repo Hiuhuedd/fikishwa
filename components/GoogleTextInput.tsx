@@ -76,7 +76,7 @@ const MapboxTextInput = ({
       console.error("Error saving location data:", error);
     }
 
-    // setSuggestions([]); // Clear suggestions
+    setSuggestions([]); // Clear suggestions
   };
 
   return (

@@ -61,6 +61,16 @@ export const useUserStore = create((set) => ({
     })),
   clearUser: () => set(() => ({ user: null, userType: null })),
 }));
+export const DriverDetailsStore = create((set) => ({
+  driver: null, // User will be an object or null initially
+
+  setDriver: (driver: { uid: string; carModel: string; plate: string,userName:string,phone:string }) =>
+    set(() => ({
+      driver: driver,
+
+    })),
+  clearUser: () => set(() => ({ driver: null })),
+}));
 
 // Driver store remains the same as before
 export const useDriverStore = create<DriverStore>((set) => ({
