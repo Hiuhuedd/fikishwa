@@ -1,8 +1,9 @@
 import { router } from "expo-router";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Image, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Swiper from "react-native-swiper";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import CustomButton from "@/components/CustomButton";
 import { onboarding } from "@/constants";
@@ -13,12 +14,27 @@ const Home = () => {
 
   const isLastSlide = activeIndex === onboarding.length - 1;
 
+  // Check if the user has already been onboarded
+  useEffect(() => {
+    const checkOnboardingStatus = async () => {
+      const hasOnboarded = await AsyncStorage.getItem("hasOnboarded");
+      if (hasOnboarded) {
+        router.replace("/(auth)/sign-in");
+      }
+    };
+
+    checkOnboardingStatus();
+  }, []);
+
+  const handleGetStarted = async () => {
+    await AsyncStorage.setItem("hasOnboarded", "true");
+    router.replace("/(auth)/sign-up");
+  };
+
   return (
     <SafeAreaView className="flex h-full items-center justify-between bg-white">
       <TouchableOpacity
-        onPress={() => {
-          router.replace("/(auth)/sign-up");
-        }}
+        onPress={handleGetStarted}
         className="w-full flex justify-end items-end p-5"
       >
         <Text className="text-black text-md font-JakartaBold">Skip</Text>
@@ -58,7 +74,7 @@ const Home = () => {
         title={isLastSlide ? "Get Started" : "Next"}
         onPress={() =>
           isLastSlide
-            ? router.replace("/(auth)/sign-up")
+            ? handleGetStarted()
             : swiperRef.current?.scrollBy(1)
         }
         className="w-11/12 mt-10 mb-5"

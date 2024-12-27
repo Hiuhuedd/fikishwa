@@ -54,7 +54,7 @@ export const useLocationStore = create<LocationStore>((set) => ({
 export const useUserStore = create((set) => ({
   user: null, // User will be an object or null initially
   userType: null, // Store user type (e.g., 'driver', 'user')
-  setUser: (user: { uid: string; email: string; userType: string,userName:string }) =>
+  setUser: (user: { uid: string; email: string; userType: string,userName:string,phone:string }) =>
     set(() => ({
       user: user,
       userType: user.userType,

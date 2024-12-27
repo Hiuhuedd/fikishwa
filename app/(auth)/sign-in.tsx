@@ -61,8 +61,8 @@ console.log(userData);
         if (userType === "driver") {
           const driverDoc = await getDoc(doc(db, "driverDetails", user.uid));
       
-          if (userDoc.exists()) {
-            const userData = userDoc.data();
+          if (driverDoc.exists()) {
+            const userData = driverDoc.data();
    if(!userData.carModel){
     router.replace("/driver-reg");
 

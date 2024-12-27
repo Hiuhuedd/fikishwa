@@ -181,7 +181,7 @@ declare interface User {
   profileImageUrl?: string; // Optional: URL for the user's profile image
   carImageUrl?: string; // Optional: URL for the car image (for drivers)
   rating?: number; // Optional: Rating (for drivers)
-  phoneNumber?: string; // Optional: User's phone number
+  phone?: string; // Optional: User's phone number
   createdAt: string; // Timestamp when the user account was created
   updatedAt: string; // Timestamp when the user account was last updated
 }

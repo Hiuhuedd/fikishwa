@@ -6,10 +6,13 @@ import Payment from "@/components/Payment";
 import RideLayout from "@/components/RideLayout";
 import { icons } from "@/constants";
 import { formatTime } from "@/lib/utils";
-import { useDriverStore, useLocationStore } from "@/store";
+import { useDriverStore, useLocationStore, useUserStore} from "@/store";
 import MpesaPayment from "@/components/Payment";
 import CustomButton from "@/components/CustomButton";
 import { useState, useEffect } from "react";
+import { getFirestore, doc, updateDoc, setDoc } from "firebase/firestore";
+import { Alert } from "react-native";
+import React from "react";
 
 const BookRide = () => {
   const {
@@ -20,7 +23,7 @@ const BookRide = () => {
     destinationLongitude,
     destinationLatitude,
   } = useLocationStore();
-  const { user } = useUser();
+  const { user } = useUserStore();
   const { selectedDriver } = useDriverStore();
      
   const drivers = [
@@ -86,6 +89,40 @@ const BookRide = () => {
   )[0];
   console.log(drivers, selectedDriver);
   const [paymentModal, setPaymentModal] = useState(false);
+
+
+ 
+
+    const confirmRide = async () => {
+      try {
+        const db = getFirestore();
+        const rideDocRef = doc(db, "driverNotifications", "gHNG45Pk6iecvOa87o9OgoOk0Xh2");
+    
+        // Update the ride confirmation status
+        await setDoc(rideDocRef, {
+          status: "confirmed",
+          confirmedAt: new Date().toISOString(),
+          rideId: user.uid,
+          userAddress,
+          destinationAddress,
+          userLongitude,
+          userLatitude,
+          destinationLongitude,
+          destinationLatitude,
+       
+        });
+    
+        // Notify the user
+        Alert.alert("Success", "Ride has been confirmed!");
+      } catch (error) {
+        console.error("Error confirming ride:", error);
+        Alert.alert("Error", "Failed to confirm the ride. Please try again.");
+      }
+    };
+    
+  
+  
+
 
   // Handle back button press when payment modal is open
   useEffect(() => {
@@ -209,20 +246,14 @@ const BookRide = () => {
         </View>
 
         <CustomButton
-          title="Confirm Ride"
-          onPress={() => setPaymentModal(true)}
-          className="mt-5"
-        />
-          {paymentModal && (
-            <MpesaPayment
-              fullName={user?.fullName!}
-              email={user?.emailAddresses[0].emailAddress!}
-              amount={Number(200)}
-              driverId={driverDetails?.id}
-              rideTime={driverDetails?.time!}
-              onClose={() => setPaymentModal(false)}
-            />
-          )}
+  title="Confirm Ride"
+  onPress={async () => {
+    await confirmRide();
+    // Additional code or navigation if needed
+  }}
+  className="mt-5"
+/>
+         
       </>
     </RideLayout>
   );
